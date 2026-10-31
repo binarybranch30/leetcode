@@ -1,22 +1,32 @@
 class Solution {
 public:
-    void sortt(vector<int>& no, int start, int end){
-        if(start > end)
-            return;
-        int randomIndex = start + rand() % (end - start + 1);
-        swap(no[start], no[randomIndex]);
-        int pivot = no[start];
-        int s = start;
-        for(int i = start+1; i <= end; i++){
-            if(no[i] < pivot)
-                swap(no[++s], no[i]);
+    void merge(vector<int>& nums, int low, int mid, int high) {
+        vector<int> temp;
+        int i = low;
+        int j = mid + 1;
+        while(i <= mid && j <= high) {
+            if(nums[i] <= nums[j])
+                temp.push_back(nums[i++]);
+            else
+                temp.push_back(nums[j++]);
         }
-        swap(no[start], no[s]);
-        sortt(no, start, s-1);
-        sortt(no, s+1, end);
+        while(i <= mid)
+            temp.push_back(nums[i++]);
+        while(j <= high)
+            temp.push_back(nums[j++]);
+        for(int k = low; k <= high; k++)
+            nums[k] = temp[k - low];
+    }
+    void mergeSort(vector<int>& nums, int low, int high) {
+        if(low >= high)
+            return;
+        int mid = low + (high - low) / 2;
+        mergeSort(nums, low, mid);
+        mergeSort(nums, mid + 1, high);
+        merge(nums, low, mid, high);
     }
     vector<int> sortArray(vector<int>& nums) {
-        sortt(nums ,0 , nums.size() - 1 );
+        mergeSort(nums, 0, nums.size() - 1);
         return nums;
     }
 };
