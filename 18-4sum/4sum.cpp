@@ -1,45 +1,40 @@
 class Solution {
 public:
     vector<vector<int>> fourSum(vector<int>& nums, int target) {
-        int n = nums.size();
         sort(nums.begin(), nums.end());
-
-        vector<pair<int,int>> pairs;
-        unordered_map<long long, vector<int>> sums;
         vector<vector<int>> ans;
+        int n = nums.size();
 
-        for(int c = 1; c < n-1; c++){
-            int b = c-1;
+        for(int i = 0; i < n-3; i++){
+            if(i > 0 && nums[i] == nums[i-1])
+                continue;
 
-            for(int a = 0; a < b; a++){
-                if(a > 0 && nums[a] == nums[a-1])
+            for(int j = i+1; j < n-2; j++){
+                if(j > i+1 && nums[j] == nums[j-1])
                     continue;
 
-                long long sum = (long long)nums[a] + nums[b];
-                sums[sum].push_back(pairs.size());
-                pairs.push_back({nums[a], nums[b]});
-            }
+                int k = j+1, l = n-1;
 
-            for(int d = c+1; d < n; d++){
-                if(d > c+1 && nums[d] == nums[d-1])
-                    continue;
+                while(k < l){
+                    long long sum = (long long)nums[i] + nums[j] + nums[k] + nums[l];
 
-                long long need = (long long)target - nums[c] - nums[d];
-                auto it = sums.find(need);
+                    if(sum < target)
+                        k++;
+                    else if(sum > target)
+                        l--;
+                    else{
+                        ans.push_back({nums[i], nums[j], nums[k], nums[l]});
+                        k++;
+                        l--;
 
-                if(it == sums.end())
-                    continue;
-
-                for(int idx : it->second){
-                    auto [x, y] = pairs[idx];
-                    ans.push_back({x, y, nums[c], nums[d]});
+                        while(k < l && nums[k] == nums[k-1])
+                            k++;
+                        while(k < l && nums[l] == nums[l+1])
+                            l--;
+                    }
                 }
             }
         }
-
-        sort(ans.begin(), ans.end());
-        ans.erase(unique(ans.begin(), ans.end()), ans.end());
-
         return ans;
     }
 };
