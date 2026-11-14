@@ -1,28 +1,36 @@
 class Solution {
 public:
     void setZeroes(vector<vector<int>>& matrix) {
-        set<int> r;
-        set<int> c;
+        int m = matrix.size(), n = matrix[0].size();
+        bool firstRow = false, firstCol = false;
 
-        int m = matrix.size();
-        int n = matrix[0].size();
-
+        for(int j = 0; j < n; j++){
+            if(matrix[0][j] == 0)
+                firstRow = true;
+        }
         for(int i = 0; i < m; i++){
-            for(int j = 0; j < n; j++){
+            if(matrix[i][0] == 0)
+                firstCol = true;
+        }
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
                 if(matrix[i][j] == 0){
-                    r.insert(i);
-                    c.insert(j);
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
                 }
             }
-        } // <-- Missing brace was here
-
-        for(int i : r)
-            fill(matrix[i].begin(), matrix[i].end(), 0);
-
-        for(int j : c){
-            for(int i = 0; i < m; i++){
-                matrix[i][j] = 0;
+        }
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
+                if(matrix[i][0] == 0 || matrix[0][j] == 0)
+                    matrix[i][j] = 0;
             }
+        }
+        if(firstRow)
+            fill(matrix[0].begin(), matrix[0].end(), 0);
+        if(firstCol){
+            for(int i = 0; i < m; i++)
+                matrix[i][0] = 0;
         }
     }
 };
